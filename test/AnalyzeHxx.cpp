@@ -26,9 +26,6 @@ void usage(){
    cout << "\n";
    cout << "  --met_smear=<x>   : extra amount to smear MET.\n";
    cout << "  --num_smear=<n>   : number of times to smear MET.\n";
-   cout << "  --fake_rate=<x>   : apply simple (whole event) fake rate <x> to W+jets.\n";
-   cout << "  --8tev            : 8 tev settings (default 14 tev).\n";
-   cout << "  --pub_plots       : generate publication plots.\n";
    exit(0);
 }
 
@@ -73,31 +70,10 @@ int main(int argc, char *argv[])
    
    //check for the --help option:
    if ( options.find("--help") ) { usage(); }
-   //options.set("--seed=", seed);   
-   //if (seed > 0) rng.SetSeed(seed);
    double met_smear = 30.0;
    options.set("--met_smear=", met_smear);   
    int    num_smear = 1;
    options.set("--num_smear=", num_smear);   
-   double fake_rate = 0.0;
-   options.set("--fake_rate=", fake_rate);   
-   int mode_8tev = options.find("--8tev");
-   int pub_plots = options.find("--pub_plots");
-
-
-
-   double lumi = 300;
-   double met_cut = 150.0;
-
-   if (mode_8tev){
-     lumi = 20.0;
-     met_cut = 75;
-     cout << "INFO:  settings for sqrt(s) = 8 TeV\n";
-   } else {
-     cout << "INFO:  settings for sqrt(s) = 14 TeV\n";
-   }
-   cout << "INFO:  lumi:     " << lumi << "\n";
-   cout << "INFO:  MET cut:  " << met_cut << "\n";
 
    //check for unrecognized options (beginning with -- or -)
    while(options.unrecognized_option(opt)){
@@ -118,7 +94,6 @@ int main(int argc, char *argv[])
    cout << "INFO: writing results to directory:  " << outdir  << "\n";
    cout << "INFO: MET smearing amount is " << met_smear << "\n";
    cout << "INFO: MET smearing number is " << num_smear << "\n";
-   cout << "INFO: W+jets fake rate is " << fake_rate << "\n";
 
    auto_write aw;
 
@@ -134,19 +109,18 @@ int main(int argc, char *argv[])
      cutflow.add_sample_name(9001, "PU");
      cutflow.add_sample_name(9002, "NO_PU");
 */
-     h0mll.add_sample(20, "_hxx_1GeV");
-     h0mll.add_sample(21, "_hxx_10GeV");
-     h0mll.add_sample(22, "_hxx_100GeV");
-     h0mll.add_sample(23, "_hxx_500GeV");
-     h0mll.add_sample(24, "_hxx_1000GeV");
-     
-     cutflow.add_sample_name(20, "hxx_1GeV"); 
-     cutflow.add_sample_name(21, "hxx_10GeV"); 
-     cutflow.add_sample_name(22, "hxx_100GeV"); 
-     cutflow.add_sample_name(23, "hxx_500GeV"); 
-     cutflow.add_sample_name(24, "hxx_1000GeV"); 
-
+   h0mll.add_sample(20, "_hxx_1GeV");
+   h0mll.add_sample(21, "_hxx_10GeV");
+   h0mll.add_sample(22, "_hxx_100GeV");
+   h0mll.add_sample(23, "_hxx_500GeV");
+   h0mll.add_sample(24, "_hxx_1000GeV");
    
+   cutflow.add_sample_name(20, "hxx_1GeV"); 
+   cutflow.add_sample_name(21, "hxx_10GeV"); 
+   cutflow.add_sample_name(22, "hxx_100GeV"); 
+   cutflow.add_sample_name(23, "hxx_500GeV"); 
+   cutflow.add_sample_name(24, "hxx_1000GeV"); 
+
    h0mll.add_auto_write(aw);
 
    TH1F hfit_bkg("sample_1","",  100,0.0,300.0);
@@ -164,7 +138,6 @@ int main(int argc, char *argv[])
    hfit_sig22.Sumw2();
    hfit_sig23.Sumw2();
    hfit_sig24.Sumw2();
-
 
    //histograms at stage 0
    histogram_manager h0ID       (new TH1F("h0ID",     "", 25,  0.0, 25.0), h0mll, aw);
@@ -192,18 +165,12 @@ int main(int argc, char *argv[])
    histogram_manager h0gch      (new TH1F("h0gch",    "", 60,   -5.0, 5.0),  h0mll, aw);
    histogram_manager h0gcnt     (new TH1F("h0gcnt",   "", 10,   0.0, 10.0),  h0mll, aw);
    
-   histogram_manager h0mee      (new TH1F("h0mee",    "", 100,  0.0, 250.0), h0mll, aw);
-   histogram_manager h0mmm      (new TH1F("h0mmm",    "", 100,  0.0, 250.0), h0mll, aw);
    histogram_manager h0mgg      (new TH1F("h0mgg",    "", 100,  0.0, 250.0), h0mll, aw);
-   histogram_manager h0mll_l    (new TH1F("h0mll_l",  "", 100,  0.0, 250.0), h0mll, aw);
-   histogram_manager h0mll_sl   (new TH1F("h0mll_sl", "", 100,  0.0, 250.0), h0mll, aw);
-   histogram_manager h0mllll    (new TH1F("h0mllll",  "", 100,  0.0, 250.0), h0mll, aw);
    
    histogram_manager h0met_nopu (new TH1F("h0met_nopu", "", 100,  0.0, 250.0), h0mll, aw);
    histogram_manager h0met_pu   (new TH1F("h0met_pu",   "", 100,  0.0, 250.0), h0mll, aw);
    histogram_manager h0met_nopu_phi (new TH1F("h0met_nopu_phi", "", 60,   -5.0, 5.0),  h0mll, aw);
    histogram_manager h0met_pu_phi   (new TH1F("h0met_pu_phi",   "", 60,   -5.0, 5.0),  h0mll, aw);
-   
    
    //histograms after analysis cuts
    histogram_manager h1met_nopu (new TH1F("h1met_nopu", "", 100,  0.0, 250.0), h0mll, aw);
@@ -212,7 +179,6 @@ int main(int argc, char *argv[])
 
    TFile * file = new TFile(infile.c_str());
    TDirectoryFile * dir = (TDirectoryFile*) file->Get("demo");
-   //TDirectoryFile	demo;1	demo
    TTree * tree = (TTree*) dir->Get("hxxtree");
 
    if (! tree) {
@@ -270,12 +236,12 @@ int main(int argc, char *argv[])
      */
 ////////////////////////////////////////////////////////////////////////////////////////////
     
-    cutflow.increment(0, data.sample, data.weight);      
+      cutflow.increment(0, data.sample, data.weight);      
 
       h0mll.Fill(data.sample, data.mll, data.weight);
       
-     //Fill single lepton hists at stage 0 
-     for(int i=0; i<data.nelec; i++){
+      //Fill single lepton hists at stage 0 
+      for(int i=0; i<data.nelec; i++){
         //cout << data.nelec << " " << data.elec_pt->size() << " " << data.sample << endl;
         h0ept  .Fill(data.sample, data.elec_pt->at(i),     data.weight);
         h0eeta .Fill(data.sample, data.elec_eta->at(i),    data.weight);
@@ -291,8 +257,8 @@ int main(int argc, char *argv[])
       }
       h0mcnt   .Fill(data.sample, data.nmuon,    data.weight);
 
-     //Fill single photon hists at stage 0 
-     for(int i=0; i<data.nphot; i++){
+      //Fill single photon hists at stage 0 
+      for(int i=0; i<data.nphot; i++){
         h0gpt  .Fill(data.sample, data.phot_pt->at(i),     data.weight);
         h0geta .Fill(data.sample, data.phot_eta->at(i),    data.weight);
         h0gphi .Fill(data.sample, data.phot_phi->at(i),    data.weight);
@@ -369,26 +335,20 @@ int main(int argc, char *argv[])
    aw.WriteAll();
    foutroot->Close();
 
+   cout << "Cutflow: Stage 0 (gg preselection)" << endl;
+   cutflow.print(0);
 
-//////////////////// 2g ////////////////////////////
+   cout << "Cutflow: Stage 1 (after single photon cuts)" << endl;
+   cutflow.print(1);
 
-cout << "Cutflow: Stage 0 (gg preselection)" << endl;
-cutflow.print(0);
+   cout << "Cutflow: Stage 2 (after diphoton cut)" << endl;
+   cutflow.print(2);
 
-cout << "Cutflow: Stage 1 (after single photon cuts)" << endl;
-cutflow.print(1);
+   cout << "Cutflow: Stage 3 (after single lepton cuts)" << endl;
+   cutflow.print(3);
 
-cout << "Cutflow: Stage 2 (after diphoton cut)" << endl;
-cutflow.print(2);
-
-cout << "Cutflow: Stage 3 (after single lepton cuts)" << endl;
-cutflow.print(3);
-
-cout << "Cutflow: Stage 4 (after Met cut)" << endl;
-cutflow.print(4);
-
-////////////////////////////////////////////////////
-   
+   cout << "Cutflow: Stage 4 (after Met cut)" << endl;
+   cutflow.print(4);
 
    //cout << "Fit Histogram Summary:  \n";
    //double SIGTOT = lumi * 149.8;
@@ -457,8 +417,6 @@ cutflow.print(4);
    h->Write();
    hfit_bkg.Write();
    f->Close();
-
-
 
 }
 

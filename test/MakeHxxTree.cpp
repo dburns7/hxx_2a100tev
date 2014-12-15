@@ -50,12 +50,12 @@ int main(int argc, char *argv[])
 {
    TRandom rng;
    hxx_tree data;
-   int    seed = 0;
-   int    sample = 0;
-   double lumi = 14.0;
-   double xsec = 0.0;
-   double weight = 1.0; 
-   int maxevent = 0;
+   int    seed     = 0;
+   int    sample   = 0;
+   double lumi     = 14.0;
+   double xsec     = 0.0;
+   double weight   = 1.0; 
+   int    maxevent = 0;
 
    std::string opt, infile, outfile;
    koptions options(argc, argv);

@@ -11,18 +11,18 @@ BR_W_LV = 0.216
 
 # Higgs production cross sections in fb from https://twiki.cern.ch/twiki/bin/view/LHCPhysics/HiggsEuropeanStrategy#SM_Higgs_decay_branching_ratio_M
 PB_TO_FB = 1E3
-SIGMA_H  = (740.3 + 82) * PB_TO_FB
-SIGMA_WH = 15.9         * PB_TO_FB
-SIGMA_ZH = 11.26        * PB_TO_FB  
+SIGMA_H  = (178.3 + 16.5) * PB_TO_FB
+SIGMA_WH = 4.71           * PB_TO_FB
+SIGMA_ZH = 2.97           * PB_TO_FB  
 
 # Background production cross sections from madgraph
-SIGMA_AA  = 0.3605      * PB_TO_FB
-SIGMA_ZAA = 0.004908    * PB_TO_FB
+SIGMA_AA  = 1
+SIGMA_ZAA = 1
 
 # Signal cross section is taken to be 100 pb:
 SIGMA_HXX = 100 * PB_TO_FB
 
-print "Sigma x BR in fb at 100 TeV"
+print "Sigma x BR in fb at 33 TeV"
 print "Backgrounds:  "
 print "Zh, Z->vv     ........................", SIGMA_ZH  * BR_Z_VV
 print "Wh, W->lv     ........................", SIGMA_WH  * BR_W_LV
